@@ -44,3 +44,41 @@ button:hover {
   margin-top: 20px;
   font-weight: bold;
 }
+
+/* #erdekességek a fülekröl */
+.facts-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 20px;
+  background-color: #f0f8ff;
+}
+
+.fact-card {
+  width: 300px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+  animation: fadeInUp 1s ease forwards;
+  opacity: 0;
+}
+
+.fact-card img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
