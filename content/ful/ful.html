@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <title>Fül – Dr. Salamon Attila</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>👂 Fedezd fel a füled!</h1>
+    <p>Tanulj a hallásról és teszteld a tudásod!</p>
+  </header>
+
+  <section class="info">
+    <h2>Érdekességek</h2>
+    <ul>
+      <li>A füled segít az egyensúly megtartásában is.</li>
+      <li>A kengyelcsont a tested legkisebb csontja – mindössze 3 mm!</li>
+      <li>A fülzsír védelmet nyújt a baktériumok ellen.</li>
+    </ul>
+  </section>
+
+  <section class="quiz">
+    <h2>Kvíz: Mit tudsz a füledről?</h2>
+    <form id="quizForm">
+      <label>1. Mi a fül legkisebb csontja?</label><br>
+      <input type="radio" name="q1" value="A"> Ujjperc<br>
+      <input type="radio" name="q1" value="B"> Kengyelcsont<br>
+      <input type="radio" name="q1" value="C"> Kulcscsont<br><br>
+
+      <label>2. Miért fontos a fülzsír?</label><br>
+      <input type="radio" name="q2" value="A"> Mert jól néz ki<br>
+      <input type="radio" name="q2" value="B"> Mert segít a hallásban<br>
+      <input type="radio" name="q2" value="C"> Mert véd a baktériumoktól<br><br>
+
+      <button type="button" onclick="checkAnswers()">Eredmény</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Dr. Salamon Attila – Városkapu Egészségcentrum</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
