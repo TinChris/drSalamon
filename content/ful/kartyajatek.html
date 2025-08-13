@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip‑Kacheln Demo</title>
+  <meta name="description" content="2x2 Kachel-Grid mit Hover/Card-Flip-Effekt und mobiler Touch-Unterstützung. Links Notiz-Panel im Stil des Beispiels.">
+  <style>
+    :root{
+      --bg: #dde3fb;          /* Lila-Blau wie Vorlage */
+      --paper: #fffdf6;       /* Papierfarbe */
+      --ink: #121212;         /* Text */
+      --accent: #0a7d2c;      /* optionaler Akzent */
+      --card: #ffffff;
+      --shadow: rgba(0,0,0,.08);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans";line-height:1.5;color:var(--ink);background:var(--bg)}
+    a{color:inherit}
+
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* Layout: links Papier-Notiz, rechts Grid */
+    .layout{display:grid;gap:24px;grid-template-columns:1fr}
+    @media (min-width: 960px){
+      .layout{grid-template-columns: 1.1fr 1fr}
+    }
+
+    /* Papier-Notiz links */
+    .note{
+      background: var(--paper);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px var(--shadow);
+      padding: 28px 24px 40px;
+      position: relative;
+    }
+    /* Oben Lochreihe (abgerissenes Notizheft) */
+    .note::before{
+      content:"";
+      position:absolute;left:0;right:0;top:0;height:42px;border-radius:10px 10px 0 0;
+      background:
+        radial-gradient(circle at 26px 20px, transparent 10px, var(--paper) 11px) repeat-x;
+      background-size: 80px 42px; /* Abstand der Löcher */
+      box-shadow: inset 0 -12px 0 rgba(0,0,0,0.03);
+    }
+    /* Untere „gerissene“ Kante */
+    .note::after{
+      content:"";position:absolute;left:0;right:0;bottom:-8px;height:20px;
+      background: radial-gradient(12px 8px at 12px 12px, transparent 10px, var(--paper) 11px) repeat-x;
+      background-size: 24px 20px; filter: drop-shadow(0 6px 10px var(--shadow));
+    }
+    .note h1{font-size:clamp(28px,4.6vw,44px);margin:18px 0 10px;font-weight:800}
+    .note p{margin:0 0 10px;max-width:65ch}
+    .note .due{display:inline-block;background:#ffb703;color:#000;font-weight:800;padding:8px 10px;border-radius:12px;box-shadow:0 6px 14px var(--shadow)}
+
+    /* Kachel-Grid rechts */
+    .grid{display:grid;gap:18px;grid-template-columns:1fr}
+    @media (min-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+    .tile{position:relative;perspective:1000px; /* 3D Raum */}
+    .tile-inner{
+      position:relative;width:100%;height:220px;border-radius:var(--radius);
+      transition:transform .7s cubic-bezier(.2,.6,.2,1);
+      transform-style:preserve-3d;box-shadow:0 10px 26px var(--shadow);
+    }
+    .tile .face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;overflow:hidden}
+    .tile .front{background:var(--card);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px;gap:8px}
+    .tile .front .num{font-weight:900;font-size:20px;background:#eef1ff;border-radius:999px;padding:6px 10px}
+    .tile .front .title{font-weight:700;text-align:center}
+
+    .tile .back{transform:rotateY(180deg);display:grid;grid-template-rows:1fr auto}
+    .tile .back img{width:100%;height:100%;object-fit:cover;display:block}
+    .tile .back .caption{padding:12px;background:rgba(255,255,255,.92)}
+
+    /* Hover/Focus/State: flip */
+    .tile:hover .tile-inner,
+    .tile:focus-within .tile-inner,
+    .tile.flipped .tile-inner{transform:rotateY(180deg)}
+
+    /* Unsichtbarer, aber fokussierbarer Button für Tastaturbedienung */
+    .tile .flip-btn{position:absolute;inset:0;border:0;background:none;padding:0;cursor:pointer}
+    .tile .flip-btn:focus{outline:2px solid #333;border-radius:var(--radius)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="layout">
+      <!-- Linkes Notiz-Panel -->
+      <article class="note" aria-labelledby="h1">
+        <h1 id="h1">Literary Playlist</h1>
+        <p>Erstelle eine Musik‑Playlist, die Figuren, Szenen und Themen aus einem Roman hervorhebt. Passe Text & Sprache nach Bedarf an.</p>
+        <p class="due">Abgabe: 16. Mai</p>
+      </article>
+
+      <!-- Rechtes Kachel-Grid mit Flip-Effekt -->
+      <div class="grid" aria-label="Aufgaben-Kacheln">
+        <!-- Kachel 1 -->
+        <article class="tile" tabindex="0">
+          <div class="tile-inner">
+            <div class="face front">
+              <div class="num">01</div>
+              <div class="title">Roman wählen</div>
+              <div class="desc" style="text-align:center">Suche einen Roman, der deine Playlist inspiriert.</div>
+            </div>
+            <div class="face back">
+              <img src="img/tile1.jpg" alt="Symbolbild zu Romanwahl">
+              <div class="caption">Wir starten mit eurer Buchauswahl.</div>
+            </div>
+          </div>
+          <button class="flip-btn" aria-label="Kachel 1 drehen"><span class="sr-only">Kachel drehen</span></button>
+        </article>
+
+        <!-- Kachel 2 -->
+        <article class="tile" tabindex="0">
+          <div class="tile-inner">
+            <div class="face front">
+              <div class="num">02</div>
+              <div class="title">Playlist erstellen</div>
+              <div class="desc" style="text-align:center">Lege 10 passende Songs fest.</div>
+            </div>
+            <div class="face back">
+              <img src="img/tile2.jpg" alt="Symbolbild Playlist">
+              <div class="caption">10 Titel, klar begründet.</div>
+            </div>
+          </div>
+          <button class="flip-btn" aria-label="Kachel 2 drehen"><span class="sr-only">Kachel drehen</span></button>
+        </article>
+
+        <!-- Kachel 3 -->
+        <article class="tile" tabindex="0">
+          <div class="tile-inner">
+            <div class="face front">
+              <div class="num">03</div>
+              <div class="title">Begründung schreiben</div>
+              <div class="desc" style="text-align:center">Zu jedem Song ein kurzer Absatz.</div>
+            </div>
+            <div class="face back">
+              <img src="img/tile3.jpg" alt="Symbolbild Schreiben">
+              <div class="caption">Warum passt der Song? Kurz begründen.</div>
+            </div>
+          </div>
+          <button class="flip-btn" aria-label="Kachel 3 drehen"><span class="sr-only">Kachel drehen</span></button>
+        </article>
+
+        <!-- Kachel 4 -->
+        <article class="tile" tabindex="0">
+          <div class="tile-inner">
+            <div class="face front">
+              <div class="num">04</div>
+              <div class="title">Präsentation vorbereiten</div>
+              <div class="desc" style="text-align:center">Stichpunkte und Zeit planen.</div>
+            </div>
+            <div class="face back">
+              <img src="img/tile4.jpg" alt="Symbolbild Präsentation">
+              <div class="caption">Kurz, klar, auf den Punkt.</div>
+            </div>
+          </div>
+          <button class="flip-btn" aria-label="Kachel 4 drehen"><span class="sr-only">Kachel drehen</span></button>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Touch-/Click-Unterstützung: Kachel per Klick umdrehen (toggle) – bleibt dann stehen
+    document.querySelectorAll('.tile').forEach(tile => {
+      tile.addEventListener('click', (e) => {
+        // Klicks auf Links/Buttons inhaltlich nicht kapern
+        if (e.target.closest('a') && !e.target.classList.contains('flip-btn')) return;
+        tile.classList.toggle('flipped');
+      });
+      // Tastaturbedienung: Enter/Space toggeln
+      tile.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          tile.classList.toggle('flipped');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
